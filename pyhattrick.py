@@ -1,0 +1,191 @@
+import oauth2 as oauth
+import time
+import urllib2 
+import contextlib
+import xml.etree.ElementTree as ET
+import pandas as pd
+
+url = "http://chpp.hattrick.org/chppxml.ashx"
+url_req_token = "https://chpp.hattrick.org/oauth/request_token.ashx"
+url_aut_token = "https://chpp.hattrick.org/oauth/authorize.aspx"
+url_content = "http://chpp.hattrick.org/chppxml.ashx"
+
+
+signature_method = oauth.SignatureMethod_HMAC_SHA1()
+
+
+token = oauth.Token(key='xxx', secret='xxx')
+consumer = oauth.Consumer(key="xxx", secret="xxx")
+
+def get_series_id_from_name(series_name):
+
+    params = {
+        'oauth_version': "1.0",
+        'oauth_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'file': 'search',
+        'version': 1.2,
+        'searchType': 3,
+        'searchString': series_name
+    }
+
+    req = oauth.Request(method="GET", url=url_content, parameters=params)
+    req.sign_request(signature_method, consumer,token)
+
+    with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
+                # send the request
+                responseData = x.read()
+                #print responseData
+
+    root = ET.fromstring(responseData)
+
+    for child in root.findall('SearchResults'):
+        for res in child.findall('Result'):
+            id   = res.find('ResultID').text
+            name = res.find('ResultName').text
+            if (name==series_name): return int(id)
+
+def get_teams_from_series_id(league_id):
+
+    params = {
+        'oauth_version': "1.0",
+        'oauth_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'file': 'leaguedetails',
+        'version': 1.4,
+        'leagueLevelUnitID': league_id,
+    }
+
+    req = oauth.Request(method="GET", url=url_content, parameters=params)
+    req.sign_request(signature_method, consumer,token)
+
+    with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
+                # send the request
+                responseData = x.read()
+                #return responseData
+
+    root = ET.fromstring(responseData)
+    teams = []
+    for child in root.findall('Team'):
+        id   = child.find('TeamID').text
+        name = child.find('TeamName').text
+        position = child.find('Position').text
+        points = child.find('Points').text
+        goalsFor = child.find('GoalsFor').text
+        goalsAga = child.find('GoalsAgainst').text
+        teams.append({"team_name":name,"team_id":int(id), "team_points":int(points),"team_position":int(position), 
+                      "team_gFor":int(goalsFor), "team_gAga":int(goalsAga)})
+
+    return teams
+
+def write_team_table(league_ids):
+    '''
+    get a list of league_ids and writes a dataframe with teams in the leagues. 
+    '''
+    df_teams = pd.DataFrame(columns=('team_name', 'team_id', 'series_id', 'team_position', 'team_points', 
+                                     'team_gFor', 'team_gAga'))
+    i=0
+    for id in league_ids:
+        teams = get_teams_from_series_id(id)
+        for t in teams:     
+            df_teams.loc[i] = [t["team_name"],t["team_id"],id,t["team_position"],
+                               t["team_points"],t["team_gFor"],t["team_gAga"] ]
+            i+=1
+            
+    return df_teams
+
+def get_matches_from_team_id(team_id):
+
+    params = {
+        'oauth_version': "1.0",
+        'oauth_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'file': 'matchesarchive',
+        'version': 1.4,
+        'teamID': team_id,
+    }
+
+    req = oauth.Request(method="GET", url=url_content, parameters=params)
+    req.sign_request(signature_method, consumer,token)
+
+    with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
+                # send the request
+                responseData = x.read()
+                #return responseData
+
+    
+    root = ET.fromstring(responseData)
+    matches = []
+    for child in root.findall('Team'):
+        for res in child.findall('MatchList'):
+            for match in res.findall('Match'):
+                id     = match.find('MatchID').text
+                type   = match.find('MatchType').text
+                #status = match.find('Status').text
+                date   = match.find('MatchDate').text                
+                matches.append({"match_id":int(id),"match_type":int(type),#"match_status":status,
+                                "match_date":date})
+
+    return matches
+
+
+def get_ratings_from_match_id(match_id):
+
+    params = {
+        'oauth_version': "1.0",
+        'oauth_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'file': 'matchdetails',
+        'version': 1.4,
+        'matchID': match_id,
+    }
+
+    req = oauth.Request(method="GET", url=url_content, parameters=params)
+    req.sign_request(signature_method, consumer,token)
+
+    with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
+                # send the request
+                responseData = x.read()
+                #return responseData
+
+    
+    root = ET.fromstring(responseData)
+    ratings = []
+    for child in root.findall('Match'):
+        for team in child.findall('HomeTeam'):
+            team_name_home = team.find('HomeTeamName').text
+            team_id_home = team.find('HomeTeamID').text
+            midfield_home = team.find('RatingMidfield').text
+            rightdef_home = team.find('RatingRightDef').text
+            middef_home = team.find('RatingMidDef').text
+            leftdef_home = team.find('RatingLeftDef').text
+            rightatt_home = team.find('RatingRightAtt').text
+            midatt_home = team.find('RatingMidAtt').text
+            leftatt_home = team.find('RatingLeftAtt').text
+
+            #team_name_home = team.find('HomeTeamName').text
+            #team_name_home = team.find('HomeTeamName').text
+            ratings.append({"team_name_home":team_name_home,
+                            "team_id_home":int(team_id_home),
+                            "midfield_home":int(midfield_home),
+                            "defence_home":int(middef_home)+int(leftdef_home)+int(rightdef_home),
+                            "attack_home":int(midatt_home)+int(leftatt_home)+int(rightatt_home)})
+
+        for team in child.findall('AwayTeam'):
+            team_name_away = team.find('AwayTeamName').text
+            team_id_away = team.find('AwayTeamID').text
+            midfield_away  = team.find('RatingMidfield').text
+            rightdef_away = team.find('RatingRightDef').text
+            middef_away = team.find('RatingMidDef').text
+            leftdef_away = team.find('RatingLeftDef').text
+            rightatt_away = team.find('RatingRightAtt').text
+            midatt_away = team.find('RatingMidAtt').text
+            leftatt_away = team.find('RatingLeftAtt').text
+
+            ratings.append({"team_name_away":team_name_away,
+                            "team_id_away":int(team_id_away),
+                            "midfield_away":int(midfield_away),
+                            "defence_away":int(middef_away)+int(leftdef_away)+int(rightdef_away),
+                            "attack_away":int(midatt_away)+int(leftatt_away)+int(rightatt_away)})
+        
+    return ratings
