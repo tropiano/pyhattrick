@@ -13,9 +13,14 @@ url_content = "http://chpp.hattrick.org/chppxml.ashx"
 
 signature_method = oauth.SignatureMethod_HMAC_SHA1()
 
+f = open("credentials.txt")
+mykey = f.readline().strip()[11:]
+mysecret = f.readline().strip()[14:]
+conkey = f.readline().strip()[14:]
+consecret = f.readline().strip()[17:]
 
-token = oauth.Token(key='xxx', secret='xxx')
-consumer = oauth.Consumer(key="xxx", secret="xxx")
+token = oauth.Token(key=mykey, secret=mysecret)
+consumer = oauth.Consumer(key=conkey, secret=consecret)
 
 def get_series_id_from_name(series_name):
 
