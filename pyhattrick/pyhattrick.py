@@ -83,21 +83,104 @@ def get_teams_from_series_id(league_id):
 
     return teams
 
-def write_team_table(league_ids):
+def get_last_league_match_id(team_id):
+    
+    matches = get_matches_from_team_id(team_id)
+    league_matches = []
+    for match in matches:
+        if match["match_type"]==1: 
+        #and match["match_status"] == "FINISHED"
+            league_matches.append(match)
+    
+    match_id = league_matches[len(league_matches)-1]["match_id"]
+
+    return match_id
+
+def get_team_table(league_ids):
     '''
     get a list of league_ids and writes a dataframe with teams in the leagues. 
     '''
     df_teams = pd.DataFrame(columns=('team_name', 'team_id', 'series_id', 'team_position', 'team_points', 
                                      'team_gFor', 'team_gAga'))
-    i=0
+    
     for id in league_ids:
         teams = get_teams_from_series_id(id)
-        for t in teams:     
+        for i,t in enumerate(teams):     
             df_teams.loc[i] = [t["team_name"],t["team_id"],id,t["team_position"],
                                t["team_points"],t["team_gFor"],t["team_gAga"] ]
-            i+=1
+            
             
     return df_teams
+
+def get_last_midfield_table(league_ids):
+    '''
+    get a list of league ids and write a dataframe with the midfield rating for the last match for each team
+    '''
+    df_midfield = pd.DataFrame(columns=('team_id', 'midfield_rating', 'match_id'))
+    
+    
+    for id in league_ids:
+        teams = get_teams_from_series_id(id)
+        for i,team in enumerate(teams):
+            team_id = team["team_id"]
+            #print team_id
+            match_id = get_last_league_match_id(team_id)
+            #print match_id
+            rat = get_ratings_from_match_id(match_id)        
+            
+            if rat[0]['team_id_home']==team_id:     
+                df_midfield.loc[i] = [rat[0]["team_id_home"],rat[0]["midfield_home"],match_id]
+            else:
+                df_midfield.loc[i] = [rat[1]["team_id_away"],rat[1]["midfield_away"],match_id]
+            
+                            
+    return df_midfield
+
+def get_last_defence_table(league_ids):
+
+    df_defence = pd.DataFrame(columns=('team_id', 'def_rating', 'match_id'))
+    
+    for id in league_ids:
+        #print id
+        teams = get_teams_from_series_id(id)
+        for i,team in enumerate(teams):
+            team_id = team["team_id"]
+            #print team_id
+            match_id = get_last_league_match_id(team_id)
+            #print match_id
+            rat = get_ratings_from_match_id(match_id)        
+            #print rat[0]['team_id_home']
+            #print rat[1]['team_id_away']
+            
+            if rat[0]['team_id_home']==team_id:     
+                df_defence.loc[i] = [rat[0]["team_id_home"],rat[0]["defence_home"],match_id]
+            else:
+                df_defence.loc[i] = [rat[1]["team_id_away"],rat[1]["defence_away"],match_id]
+                            
+    return df_defence
+
+def get_last_attack_table(league_ids):
+
+    df_attack = pd.DataFrame(columns=('team_id', 'att_rating', 'match_id'))
+    
+    for id in league_ids:
+        #print id
+        teams = get_teams_from_series_id(id)
+        for i,team in enumerate(teams):
+            team_id = team["team_id"]
+            #print team_id
+            match_id = get_last_league_match_id(team_id)
+            #print match_id
+            rat = get_ratings_from_match_id(match_id)        
+            #print rat[0]['team_id_home']
+            #print rat[1]['team_id_away']
+            
+            if rat[0]['team_id_home']==team_id:     
+                df_attack.loc[i] = [rat[0]["team_id_home"],rat[0]["attack_home"],match_id]
+            else:
+                df_attack.loc[i] = [rat[1]["team_id_away"],rat[1]["attack_away"],match_id]
+                            
+    return df_attack
 
 def get_matches_from_team_id(team_id):
 
