@@ -156,7 +156,7 @@ def get_last_defence_table(league_ids):
             if rat[0]['team_id_home']==team_id:     
                 df_defence.loc[i] = [rat[0]["team_id_home"],rat[0]["central_defence_home"],rat[0]["left_defence_home"],rat[0]["right_defence_home"],match_id]
             else:
-                df_defence.loc[i] = [rat[1]["team_id_away"],rat[1]["central_defence_away"],rat[0]["left_defence_away"],rat[0]["right_defence_away"],match_id]
+                df_defence.loc[i] = [rat[1]["team_id_away"],rat[1]["central_defence_away"],rat[1]["left_defence_away"],rat[1]["right_defence_away"],match_id]
                             
     return df_defence
 
