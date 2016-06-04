@@ -162,7 +162,7 @@ def get_last_defence_table(league_ids):
 
 def get_last_attack_table(league_ids):
 
-    df_attack = pd.DataFrame(columns=('team_id', 'att_rating', 'match_id'))
+    df_attack = pd.DataFrame(columns=('team_id', 'cen_att_rating', 'left_att_rating', 'right_att_rating', 'match_id'))
     
     for id in league_ids:
         #print id
@@ -177,9 +177,9 @@ def get_last_attack_table(league_ids):
             #print rat[1]['team_id_away']
             
             if rat[0]['team_id_home']==team_id:     
-                df_attack.loc[i] = [rat[0]["team_id_home"],rat[0]["attack_home"],match_id]
+                df_attack.loc[i] = [rat[0]["team_id_home"],rat[0]["central_attack_home"],rat[0]["left_attack_home"],rat[0]["right_attack_home"],match_id]
             else:
-                df_attack.loc[i] = [rat[1]["team_id_away"],rat[1]["attack_away"],match_id]
+                df_attack.loc[i] = [rat[1]["team_id_away"],rat[1]["central_attack_away"],rat[1]["left_attack_away"],rat[1]["right_attack_away"],match_id]
                             
     return df_attack
 
@@ -260,7 +260,9 @@ def get_ratings_from_match_id(match_id):
                             "central_defence_home":int(middef_home),
                             "left_defence_home":int(leftdef_home),
                             "right_defence_home":int(rightdef_home),
-                            "attack_home":int(midatt_home)+int(leftatt_home)+int(rightatt_home)})
+                            "central_attack_home":int(midatt_home),
+                            "left_attack_home":int(leftatt_home),
+                            "right_attack_home":int(rightatt_home)})
 
         for team in child.findall('AwayTeam'):
             team_name_away = team.find('AwayTeamName').text
@@ -279,6 +281,8 @@ def get_ratings_from_match_id(match_id):
                             "central_defence_away":int(middef_away),
                             "left_defence_away":int(leftdef_away),
                             "right_defence_away":int(rightdef_away),
-                            "attack_away":int(midatt_away)+int(leftatt_away)+int(rightatt_away)})
+                            "central_attack_away":int(midatt_away),
+                            "left_attack_away":int(leftatt_away),
+                            "right_attack_away":int(rightatt_away)})
         
     return ratings

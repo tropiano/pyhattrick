@@ -1,4 +1,3 @@
-
 import oauth2 as oauth
 import time
 import urllib2 
@@ -79,8 +78,13 @@ def get_teams_from_series_id(league_id):
         points = child.find('Points').text
         goalsFor = child.find('GoalsFor').text
         goalsAga = child.find('GoalsAgainst').text
+        matches = child.find('Matches').text
+        won = child.find('Won').text
+        draws = child.find('Draws').text
+        lost = child.find('Lost').text
         teams.append({"team_name":name,"team_id":int(id), "team_points":int(points),"team_position":int(position), 
-                      "team_gFor":int(goalsFor), "team_gAga":int(goalsAga)})
+                      "team_gFor":int(goalsFor), "team_gAga":int(goalsAga), "team_matches":int(matches),
+                      "team_won":int(won),"team_draws":int(draws),"team_lost":int(lost),})
 
     return teams
 
@@ -102,13 +106,14 @@ def get_team_table(league_ids):
     get a list of league_ids and writes a dataframe with teams in the leagues. 
     '''
     df_teams = pd.DataFrame(columns=('team_name', 'team_id', 'series_id', 'team_position', 'team_points', 
-                                     'team_gFor', 'team_gAga'))
+                                     'team_gFor', 'team_gAga', 'team_matches', 'team_won', 'team_draw', 'team_lost'))
     
     for id in league_ids:
         teams = get_teams_from_series_id(id)
         for i,t in enumerate(teams):     
             df_teams.loc[i] = [t["team_name"],t["team_id"],id,t["team_position"],
-                               t["team_points"],t["team_gFor"],t["team_gAga"] ]
+                               t["team_points"],t["team_gFor"],t["team_gAga"],
+                               t["team_matches"], t["team_won"], t["team_draws"], t["team_lost"]]
             
             
     return df_teams
