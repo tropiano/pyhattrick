@@ -195,7 +195,6 @@ def get_matches_from_team_id(team_id):
         'oauth_nonce': oauth.generate_nonce(),
         'oauth_timestamp': str(int(time.time())),
         'file': 'matchesarchive',
-        'version': 1.4,
         'teamID': team_id,
     }
 
@@ -230,7 +229,7 @@ def get_ratings_from_match_id(match_id):
         'oauth_nonce': oauth.generate_nonce(),
         'oauth_timestamp': str(int(time.time())),
         'file': 'matchdetails',
-        'version': 1.4,
+        'version': 2.7,
         'matchID': match_id,
     }
 
@@ -256,6 +255,8 @@ def get_ratings_from_match_id(match_id):
             rightatt_home = team.find('RatingRightAtt').text
             midatt_home = team.find('RatingMidAtt').text
             leftatt_home = team.find('RatingLeftAtt').text
+            formation_home = team.find('Formation').text
+            
 
             #team_name_home = team.find('HomeTeamName').text
             #team_name_home = team.find('HomeTeamName').text
@@ -267,7 +268,8 @@ def get_ratings_from_match_id(match_id):
                             "right_defence_home":int(rightdef_home),
                             "central_attack_home":int(midatt_home),
                             "left_attack_home":int(leftatt_home),
-                            "right_attack_home":int(rightatt_home)})
+                            "right_attack_home":int(rightatt_home),
+                            "formation_home":formation_home})
 
         for team in child.findall('AwayTeam'):
             team_name_away = team.find('AwayTeamName').text
@@ -279,6 +281,7 @@ def get_ratings_from_match_id(match_id):
             rightatt_away = team.find('RatingRightAtt').text
             midatt_away = team.find('RatingMidAtt').text
             leftatt_away = team.find('RatingLeftAtt').text
+            formation_away = team.find('Formation').text
 
             ratings.append({"team_name_away":team_name_away,
                             "team_id_away":int(team_id_away),
@@ -288,6 +291,7 @@ def get_ratings_from_match_id(match_id):
                             "right_defence_away":int(rightdef_away),
                             "central_attack_away":int(midatt_away),
                             "left_attack_away":int(leftatt_away),
-                            "right_attack_away":int(rightatt_away)})
+                            "right_attack_away":int(rightatt_away),
+                            "formation_away":formation_away})
         
     return ratings
