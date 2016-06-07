@@ -256,7 +256,9 @@ def get_ratings_from_match_id(match_id):
             midatt_home = team.find('RatingMidAtt').text
             leftatt_home = team.find('RatingLeftAtt').text
             formation_home = team.find('Formation').text
-            
+            tactic_type_home = team.find('TacticType').text
+            tactic_skill_home = team.find('TacticSkill').text
+
 
             #team_name_home = team.find('HomeTeamName').text
             #team_name_home = team.find('HomeTeamName').text
@@ -269,7 +271,9 @@ def get_ratings_from_match_id(match_id):
                             "central_attack_home":int(midatt_home),
                             "left_attack_home":int(leftatt_home),
                             "right_attack_home":int(rightatt_home),
-                            "formation_home":formation_home})
+                            "formation_home":formation_home,
+                            "tactic_type_home":int(tactic_type_home),
+                            "tactic_skill_home":int(tactic_skill_home)})
 
         for team in child.findall('AwayTeam'):
             team_name_away = team.find('AwayTeamName').text
@@ -282,6 +286,8 @@ def get_ratings_from_match_id(match_id):
             midatt_away = team.find('RatingMidAtt').text
             leftatt_away = team.find('RatingLeftAtt').text
             formation_away = team.find('Formation').text
+            tactic_type_away = team.find('TacticType').text
+            tactic_skill_away = team.find('TacticSkill').text
 
             ratings.append({"team_name_away":team_name_away,
                             "team_id_away":int(team_id_away),
@@ -292,6 +298,8 @@ def get_ratings_from_match_id(match_id):
                             "central_attack_away":int(midatt_away),
                             "left_attack_away":int(leftatt_away),
                             "right_attack_away":int(rightatt_away),
-                            "formation_away":formation_away})
+                            "formation_away":formation_away,
+                            "tactic_type_away":int(tactic_type_away),
+                            "tactic_skill_away":int(tactic_skill_away)})
         
     return ratings

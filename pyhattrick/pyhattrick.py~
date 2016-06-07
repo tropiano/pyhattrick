@@ -229,7 +229,7 @@ def get_ratings_from_match_id(match_id):
         'oauth_nonce': oauth.generate_nonce(),
         'oauth_timestamp': str(int(time.time())),
         'file': 'matchdetails',
-        'version': 1.4,
+        'version': 2.7,
         'matchID': match_id,
     }
 
@@ -255,8 +255,10 @@ def get_ratings_from_match_id(match_id):
             rightatt_home = team.find('RatingRightAtt').text
             midatt_home = team.find('RatingMidAtt').text
             leftatt_home = team.find('RatingLeftAtt').text
-            formation_home = team.find('Formation')
-            
+            formation_home = team.find('Formation').text
+            tactic_type_home = team.find('TacticType').text
+            tactic_skill_home = team.find('TacticSkill').text
+
 
             #team_name_home = team.find('HomeTeamName').text
             #team_name_home = team.find('HomeTeamName').text
@@ -281,7 +283,9 @@ def get_ratings_from_match_id(match_id):
             rightatt_away = team.find('RatingRightAtt').text
             midatt_away = team.find('RatingMidAtt').text
             leftatt_away = team.find('RatingLeftAtt').text
-            formation_away = team.find('Formation')
+            formation_away = team.find('Formation').text
+            tactic_type_away = team.find('TacticType').text
+            tactic_skill_away = team.find('TacticSkill').text
 
             ratings.append({"team_name_away":team_name_away,
                             "team_id_away":int(team_id_away),
