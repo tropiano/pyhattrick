@@ -222,6 +222,53 @@ def get_matches_from_team_id(team_id):
     return matches
 
 
+def get_lineups_from_match_id(match_id):
+
+    params = {
+        'oauth_version': "1.0",
+        'oauth_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'file': 'matchdetails',
+        'version': 2.7,
+        'matchID': match_id,
+    }
+
+    req = oauth.Request(method="GET", url=url_content, parameters=params)
+    req.sign_request(signature_method, consumer,token)
+
+    with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
+                # send the request                                                                                                                                                                                                            
+                responseData = x.read()
+                #return responseData                                                                                                                                                                                                          
+    root = ET.fromstring(responseData)
+    lineup = []
+    for child in root.findall('Match'):
+        for team in child.findall('HomeTeam'):
+            team_name_home = team.find('HomeTeamName').text
+            team_id_home = team.find('HomeTeamID').text
+            formation_home = team.find('Formation').text
+            tactic_type_home = team.find('TacticType').text
+            tactic_skill_home = team.find('TacticSkill').text
+            lineup.append({"formation_home":formation_home,
+                           "tactic_type_home":int(tactic_type_home),
+                           "tactic_skill_home":int(tactic_skill_home),
+                           "team_name_home":team_name_home,
+                           "team_id_home":int(team_id_home),})
+       
+        for team in child.findall('AwayTeam'):
+            team_name_away = team.find('AwayTeamName').text
+            team_id_away = team.find('AwayTeamID').text
+            formation_away = team.find('Formation').text
+            tactic_type_away = team.find('TacticType').text
+            tactic_skill_away = team.find('TacticSkill').text
+            lineup.append({"formation_home":formation_away,
+                           "tactic_type_home":int(tactic_type_away),
+                           "tactic_skill_home":int(tactic_skill_away),
+                           "team_name_away":team_name_away,
+                           "team_id_away":int(team_id_away)})     
+
+    return lineup
+
 def get_ratings_from_match_id(match_id):
 
     params = {
@@ -255,10 +302,7 @@ def get_ratings_from_match_id(match_id):
             rightatt_home = team.find('RatingRightAtt').text
             midatt_home = team.find('RatingMidAtt').text
             leftatt_home = team.find('RatingLeftAtt').text
-            formation_home = team.find('Formation').text
-            tactic_type_home = team.find('TacticType').text
-            tactic_skill_home = team.find('TacticSkill').text
-
+            
 
             #team_name_home = team.find('HomeTeamName').text
             #team_name_home = team.find('HomeTeamName').text
@@ -270,10 +314,8 @@ def get_ratings_from_match_id(match_id):
                             "right_defence_home":int(rightdef_home),
                             "central_attack_home":int(midatt_home),
                             "left_attack_home":int(leftatt_home),
-                            "right_attack_home":int(rightatt_home),
-                            "formation_home":formation_home,
-                            "tactic_type_home":int(tactic_type_home),
-                            "tactic_skill_home":int(tactic_skill_home)})
+                            "right_attack_home":int(rightatt_home)
+                            })
 
         for team in child.findall('AwayTeam'):
             team_name_away = team.find('AwayTeamName').text
@@ -285,10 +327,7 @@ def get_ratings_from_match_id(match_id):
             rightatt_away = team.find('RatingRightAtt').text
             midatt_away = team.find('RatingMidAtt').text
             leftatt_away = team.find('RatingLeftAtt').text
-            formation_away = team.find('Formation').text
-            tactic_type_away = team.find('TacticType').text
-            tactic_skill_away = team.find('TacticSkill').text
-
+            
             ratings.append({"team_name_away":team_name_away,
                             "team_id_away":int(team_id_away),
                             "midfield_away":int(midfield_away),
@@ -298,8 +337,6 @@ def get_ratings_from_match_id(match_id):
                             "central_attack_away":int(midatt_away),
                             "left_attack_away":int(leftatt_away),
                             "right_attack_away":int(rightatt_away),
-                            "formation_away":formation_away,
-                            "tactic_type_away":int(tactic_type_away),
-                            "tactic_skill_away":int(tactic_skill_away)})
+                            })
         
     return ratings
