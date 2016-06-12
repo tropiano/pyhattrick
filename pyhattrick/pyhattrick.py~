@@ -302,6 +302,8 @@ def get_ratings_from_match_id(match_id):
             rightatt_home = team.find('RatingRightAtt').text
             midatt_home = team.find('RatingMidAtt').text
             leftatt_home = team.find('RatingLeftAtt').text
+            defence_sp_home = team.find('RatingIndirectSetPiecesDef').text
+            attack_sp_home = team.find('RatingIndirectSetPiecesAtt').text
             
 
             #team_name_home = team.find('HomeTeamName').text
@@ -314,7 +316,9 @@ def get_ratings_from_match_id(match_id):
                             "right_defence_home":int(rightdef_home),
                             "central_attack_home":int(midatt_home),
                             "left_attack_home":int(leftatt_home),
-                            "right_attack_home":int(rightatt_home)
+                            "right_attack_home":int(rightatt_home),
+                            "defence_sp_home":int(defence_sp_home),
+                            "attack_sp_home":int(attack_sp_home)
                             })
 
         for team in child.findall('AwayTeam'):
@@ -327,6 +331,8 @@ def get_ratings_from_match_id(match_id):
             rightatt_away = team.find('RatingRightAtt').text
             midatt_away = team.find('RatingMidAtt').text
             leftatt_away = team.find('RatingLeftAtt').text
+            defence_sp_away = team.find('RatingIndirectSetPiecesDef').text
+            attack_sp_away = team.find('RatingIndirectSetPiecesAtt').text
             
             ratings.append({"team_name_away":team_name_away,
                             "team_id_away":int(team_id_away),
@@ -337,6 +343,8 @@ def get_ratings_from_match_id(match_id):
                             "central_attack_away":int(midatt_away),
                             "left_attack_away":int(leftatt_away),
                             "right_attack_away":int(rightatt_away),
+                            "defence_sp_away":int(defence_sp_away),
+                            "attack_sp_away":int(attack_sp_away)
                             })
         
     return ratings
