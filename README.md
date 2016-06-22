@@ -1,9 +1,20 @@
-# pyhattrick
-python functions to get HT data via HT API
+# Pyhattrick
+Pyhattrick is a library written in python to get Hattrick data via Hattrick API. 
 
-## example
-To get the series id of a league given the name 
+## Quick start
 
-`import pyhattrick as pyht`
+- Clone the repo: `git clone https://github.com/tropiano/pyhattrick.git`
+- Store your credentials in a file (for example `credentials.txt`) with this format: 
+`
+token_key, XXX
+token_secret, XXX
+consumer_key, XXX
+consumer_secret, XXX
+` 
 
-`pyht.get_series_id_from_name("Serie A")`
+## Examples
+Get the series id of a league given the name 
+
+`import pyhattrick as pyht
+	
+pyht.get_series_id_from_name("Serie A")`
