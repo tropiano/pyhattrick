@@ -71,6 +71,9 @@ def get_teams_from_series_id(league_id):
 
     root = ET.fromstring(responseData)
     teams = []
+    #for child in root.findall('CurrentMatchRound'):
+    round = root.find('CurrentMatchRound').text
+
     for child in root.findall('Team'):
         id   = child.find('TeamID').text
         name = child.find('TeamName').text
@@ -84,7 +87,7 @@ def get_teams_from_series_id(league_id):
         lost = child.find('Lost').text
         teams.append({"team_name":name,"team_id":int(id), "team_points":int(points),"team_position":int(position), 
                       "team_gFor":int(goalsFor), "team_gAga":int(goalsAga), "team_matches":int(matches),
-                      "team_won":int(won),"team_draws":int(draws),"team_lost":int(lost),})
+                      "team_won":int(won),"team_draws":int(draws),"team_lost":int(lost),"round":int(round)})
 
     return teams
 
