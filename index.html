@@ -28,7 +28,43 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <p>by <em>Antonio Tropiano</em></p>
+          <h1>
+<a id="pyhattrick" class="anchor" href="#pyhattrick" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pyhattrick</h1>
+
+<p>Pyhattrick is a library written in python to get Hattrick data via Hattrick API. </p>
+
+<h2>
+<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick start</h2>
+
+<ul>
+<li>Clone the repo: <code>git clone https://github.com/tropiano/pyhattrick.git</code>
+</li>
+<li>Store your credentials in a file (for example <code>credentials.txt</code>) with this format: </li>
+</ul>
+
+<pre><code>token_key, XXX
+token_secret, XXX
+consumer_key, XXX
+consumer_secret, XXX
+</code></pre>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>Get the series id of a league given the name </p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> pyhattrick.pyhattrick <span class="pl-k">as</span> pyht
+pyht.get_series_id_from_name(<span class="pl-s"><span class="pl-pds">"</span>Serie A<span class="pl-pds">"</span></span>)</pre></div>
+
+<p>Get the teams of a league given the seriesid</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> pyhattrick.pyhattrick <span class="pl-k">as</span> pyht
+pyht.get_teams_from_series_id(<span class="pl-c1">724</span>)</pre></div>
+
+<p>Get the last league match given the teamid</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> pyhattrick.pyhattrick <span class="pl-k">as</span> pyht
+pyht.get_last_league_match_id(<span class="pl-c1">1731962</span>)</pre></div>
         </section>
 
         <aside id="sidebar">

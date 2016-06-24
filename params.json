@@ -1,6 +1,6 @@
 {
   "name": "Pyhattrick",
   "tagline": "Python API for Hattrick",
-  "body": "by _Antonio Tropiano_\r\n",
+  "body": "# Pyhattrick\r\nPyhattrick is a library written in python to get Hattrick data via Hattrick API. \r\n\r\n## Quick start\r\n\r\n- Clone the repo: `git clone https://github.com/tropiano/pyhattrick.git`\r\n- Store your credentials in a file (for example `credentials.txt`) with this format: \r\n\r\n``` \r\ntoken_key, XXX\r\ntoken_secret, XXX\r\nconsumer_key, XXX\r\nconsumer_secret, XXX\r\n```\r\n\r\n## Examples\r\nGet the series id of a league given the name \r\n```python\r\nimport pyhattrick.pyhattrick as pyht\r\npyht.get_series_id_from_name(\"Serie A\")\r\n```\r\n\r\nGet the teams of a league given the seriesid\r\n```python\r\nimport pyhattrick.pyhattrick as pyht\r\npyht.get_teams_from_series_id(724)\r\n```\r\n\r\nGet the last league match given the teamid\r\n```python\r\nimport pyhattrick.pyhattrick as pyht\r\npyht.get_last_league_match_id(1731962)\r\n```",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
