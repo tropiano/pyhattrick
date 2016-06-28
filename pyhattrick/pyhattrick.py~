@@ -13,7 +13,7 @@ url_content = "http://chpp.hattrick.org/chppxml.ashx"
 
 signature_method = oauth.SignatureMethod_HMAC_SHA1()
 
-f = open("credentials.txt")
+f = open("/Users/tropianhs/coding/hattrick/pyhattrick/pyhattrick/credentials.txt")
 mykey = f.readline().strip()[11:]
 mysecret = f.readline().strip()[14:]
 conkey = f.readline().strip()[14:]
