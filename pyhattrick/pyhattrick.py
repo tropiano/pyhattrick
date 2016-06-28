@@ -121,7 +121,9 @@ def get_team_details_from_team_id(team_id):
         birth = t.find('FoundedDate').text
         r = t.find("Region")
         region = r.find('RegionName').text
-        team.append({"team_name":name,"team_id":int(id), "team_birth":birth,"team_region":region})
+        l = t.find("League")
+        league = l.find('LeagueName').text
+        team.append({"team_name":name,"team_id":int(id), "team_birth":birth,"team_region":region,"league_name":league})
 
     return team
 
