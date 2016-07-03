@@ -31,3 +31,9 @@ Get the last league match given the teamid
 import pyhattrick.pyhattrick as pyht
 pyht.get_last_league_match_id(1731962)
 ```
+
+Get the team details given the teamid
+```python
+import pyhattrick.pyhattrick as pyht
+pyht.get_team_details_from_team_id(1914713)
+```
