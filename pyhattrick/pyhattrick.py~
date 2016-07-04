@@ -91,6 +91,42 @@ def get_teams_from_series_id(league_id):
 
     return teams
 
+def get_team_details_from_team_id(team_id):
+
+    params = {
+        'oauth_version': "1.0",
+        'oauth_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'file': 'teamdetails',
+        'version': 3.2,
+        'teamID': team_id,
+    }
+
+    req = oauth.Request(method="GET", url=url_content, parameters=params)
+    req.sign_request(signature_method, consumer,token)
+
+    with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
+                # send the request                                                                                                                                                                                                            
+                responseData = x.read()
+                #return responseData                                                                                                                                                                                                          
+    team = []
+
+    root = ET.fromstring(responseData)
+    #for child in root.findall('CurrentMatchRound'):                                                                                                                                                                                         
+
+    for child in root.findall('Teams'):
+        t = child.find("Team")
+        id   = t.find('TeamID').text
+        name = t.find('TeamName').text
+        birth = t.find('FoundedDate').text
+        r = t.find("Region")
+        region = r.find('RegionName').text
+        l = t.find("League")
+        league = l.find('LeagueName').text
+        team.append({"team_name":name,"team_id":int(id), "team_birth":birth,"team_region":region,"league_name":league})
+
+    return team
+
 def get_last_league_match_id(team_id):
     
     matches = get_matches_from_team_id(team_id)

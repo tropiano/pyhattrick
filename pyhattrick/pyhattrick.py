@@ -109,7 +109,6 @@ def get_team_details_from_team_id(team_id):
                 # send the request                                                                                                                                                                                                            
                 responseData = x.read()
                 #return responseData                                                                                                                                                                                                          
-    team = []
 
     root = ET.fromstring(responseData)
     #for child in root.findall('CurrentMatchRound'):                                                                                                                                                                                         
@@ -123,7 +122,7 @@ def get_team_details_from_team_id(team_id):
         region = r.find('RegionName').text
         l = t.find("League")
         league = l.find('LeagueName').text
-        team.append({"team_name":name,"team_id":int(id), "team_birth":birth,"team_region":region,"league_name":league})
+    team = {"team_name":name,"team_id":int(id), "team_birth":birth,"team_region":region,"league_name":league}
 
     return team
 
