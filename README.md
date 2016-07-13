@@ -16,6 +16,24 @@ consumer_secret, XXX
 ## Examples
 Get the series id of a league given the name 
 ```python
-import pyhattrick as pyht
+import pyhattrick.pyhattrick as pyht
 pyht.get_series_id_from_name("Serie A")
+```
+
+Get the teams of a league given the seriesid
+```python
+import pyhattrick.pyhattrick as pyht
+pyht.get_teams_from_series_id(724)
+```
+
+Get the last league match given the teamid
+```python
+import pyhattrick.pyhattrick as pyht
+pyht.get_last_league_match_id(1731962)
+```
+
+Get the team details given the teamid
+```python
+import pyhattrick.pyhattrick as pyht
+pyht.get_team_details_from_team_id(1914713)
 ```
