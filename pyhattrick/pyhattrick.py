@@ -4,6 +4,8 @@ import urllib2
 import contextlib
 import xml.etree.ElementTree as ET
 import pandas as pd
+import os
+import sys
 
 url = "http://chpp.hattrick.org/chppxml.ashx"
 url_req_token = "https://chpp.hattrick.org/oauth/request_token.ashx"
@@ -13,7 +15,8 @@ url_content = "http://chpp.hattrick.org/chppxml.ashx"
 
 signature_method = oauth.SignatureMethod_HMAC_SHA1()
 
-f = open("/Users/tropianhs/coding/hattrick/pyhattrick/pyhattrick/credentials.txt")
+print sys.path[0]
+f = open(os.path.join(os.path.dirname(__file__), "credentials.txt"),"r")
 mykey = f.readline().strip()[11:]
 mysecret = f.readline().strip()[14:]
 conkey = f.readline().strip()[14:]
@@ -35,7 +38,7 @@ def get_series_id_from_name(series_name):
     }
 
     req = oauth.Request(method="GET", url=url_content, parameters=params)
-    req.sign_request(signature_method, consumer,token)
+    req.sign_request(signature_method, consumer, token)
 
     with contextlib.closing(urllib2.urlopen(req.to_url(), timeout=10)) as x:
                 # send the request
